@@ -26,21 +26,21 @@ class biselector:
 				print('i=', i, 'Loss Function update:', Lossfunc(gramx[k],gramy[k],a,b))
 		return a, b
 
+if __name__ == "__main__":
+	## Training data set
+	# x = np.array([[1,4,6],[6,2,7],[-1,-5,8],[6,9,0],[-4,-7,8],[10,-2,3],[5,0,0],[7,7,9],[1,5,2],[-6,7,0]])
+	# y = np.array([[1],[1],[-1],[1],[-1],[-1],[1],[1],[1],[-1]])
 
-## Training data set
-# x = np.array([[1,4,6],[6,2,7],[-1,-5,8],[6,9,0],[-4,-7,8],[10,-2,3],[5,0,0],[7,7,9],[1,5,2],[-6,7,0]])
-# y = np.array([[1],[1],[-1],[1],[-1],[-1],[1],[1],[1],[-1]])
+	x = [[3,3],[4,3],[1,1]]
+	y = [[1],[1],[-1]]
 
-x = [[3,3],[4,3],[1,1]]
-y = [[1],[1],[-1]]
+	# Initial guess of a and b:
+	a = np.array([0.0]*len(x))
+	b = 0.0
+	eta = 1.0
+	itera = 100
 
-# Initial guess of a and b:
-a = np.array([0.0]*len(x))
-b = 0.0
-eta = 1.0
-itera = 100
-
-#Training
-bisel = biselector()
-af, bf = bisel.dual_perceptron(a, b, x, y, eta, itera)
-print(af, bf)
+	#Training
+	bisel = biselector()
+	af, bf = bisel.dual_perceptron(a, b, x, y, eta, itera)
+	print(af, bf)

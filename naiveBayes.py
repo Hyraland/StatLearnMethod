@@ -43,16 +43,17 @@ class selector:
 
 		return classifyx(xt, yt, x, c, condlambda)
 
+if __name__ == "__main__":
+	
+	c = np.array([1,-1])
+	xt = np.array([[1,1], [1,2], [1,2], [1,1], [1,1], [2,1], [2,2], [2,2], [2,3], [2,3], [3,3], [3,2], [3,2], [3,3], [3,3]])
+	yt = np.array([-1, -1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, -1])
+	lamb = 1.0
 
-c = np.array([1,-1])
-xt = np.array([[1,1], [1,2], [1,2], [1,1], [1,1], [2,1], [2,2], [2,2], [2,3], [2,3], [3,3], [3,2], [3,2], [3,3], [3,3]])
-yt = np.array([-1, -1, 1, 1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, -1])
-lamb = 1.0
+	x = np.array([2,1])
 
-x = np.array([2,1])
-
-bisel = selector()
-print(bisel.naiveBayes(c, xt, yt, x, lamb))
+	bisel = selector()
+	print(bisel.naiveBayes(c, xt, yt, x, lamb))
 
 
 
