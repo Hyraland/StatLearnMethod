@@ -1,29 +1,36 @@
 #-*-coding:utf-8-*-
 import numpy as np
 
-class biselector:
+class dual_perceptron:
 
-	def dual_perceptron(self, a: np.ndarray, b: float, x: np.ndarray,
+	def __init__(self, a: np.ndarray, b: float, x: np.ndarray,
 	 y: np.ndarray, eta: float, itera: int):
+	    self.a = a
+	    self.b = b
+	    self.x = x
+	    self.y = y
+	    self.eta = eta
+	    self.itera = itera
 
-		def Lossfunc(x,y,a,b):
-			totloss = sum(y*(a*x)+b*y)
-			return totloss
+	def Lossfunc(self, x, y, a, b):
+		totloss = sum(y*(a*x)+b*y)
+		return totloss
 
-		def grammat(x1s, x2s):
-			x1s = np.asmatrix(x1s)
-			x2s = np.asmatrix(x2s)
-			return np.asarray(np.dot(x1s, x2s.T))
+	def grammat(self, x1s, x2s):
+		x1s = np.asmatrix(x1s)
+		x2s = np.asmatrix(x2s)
+		return np.asarray(np.dot(x1s, x2s.T))
 
-		nsamp = len(x)
-		gramx = grammat(x, x)
-		gramy = grammat(y, y)
-		for i in range(itera):
+	def solve(self):
+		nsamp = len(self.x)
+		gramx = self.grammat(self.x, self.x)
+		gramy = self.grammat(self.y, self.y)
+		for i in range(self.itera):
 			k = np.random.randint(nsamp)
-			if Lossfunc(gramx[k], gramy[k], a, b) <= 0:
-				a[k] += eta
-				b += eta*y[k][0]
-				print('i=', i, 'Loss Function update:', Lossfunc(gramx[k],gramy[k],a,b))
+			if self.Lossfunc(gramx[k], gramy[k], self.a, self.b) <= 0:
+				self.a[k] += self.eta
+				self.b += self.eta*self.y[k][0]
+				print('i=', i, 'Loss Function update:', self.Lossfunc(gramx[k], gramy[k], self.a, self.b))
 		return a, b
 
 if __name__ == "__main__":
@@ -41,6 +48,6 @@ if __name__ == "__main__":
 	itera = 100
 
 	#Training
-	bisel = biselector()
-	af, bf = bisel.dual_perceptron(a, b, x, y, eta, itera)
+	bisel = dual_perceptron(a, b, x, y, eta, itera)
+	af, bf = bisel.solve()
 	print(af, bf)

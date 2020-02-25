@@ -1,36 +1,43 @@
 #-*-coding:utf-8-*-
 import numpy as np
 
-class biselector:
+class perceptron:
 
-	def perceptron(self, w: np.ndarray, b: float, x: np.ndarray, y: np.ndarray, eta: float, itera: int):
+	def __init__(self, w: np.ndarray, b: float, x: np.ndarray, y: np.ndarray, eta: float, itera: int):
+		self.w = w
+		self.b = b
+		self.x = x
+		self.y = y
+		self.eta = eta
+		self.itera = itera
 
-		def distosurface(w,b,x,y):
-			'''Not used in real calculation, just to show how to calculate the distance to a super surface'''
-			disw = 0
-			for i in w:
-				disw += i**2
-			disw = disw**0.5
-			return -y*(w*x+b)/disw
+	def distosurface(self,w,b,x,y):
+		'''Not used in real calculation, just to show how to calculate the distance to a super surface'''
+		disw = 0
+		for i in w:
+			disw += i**2
+		disw = disw**0.5
+		return -y*(w*x+b)/disw
 
-		def Lossfunc(x,y,w,b):
-			totloss = -y*(w*x+b)
-			return sum(totloss)
+	def Lossfunc(self,x,y,w,b):
+		totloss = -y*(w*x+b)
+		return sum(totloss)
 
-		def diffLoss(x,y):
-			dw = -x*y
-			db = -y
-			return dw, db
+	def diffLoss(self,x,y):
+		dw = -x*y
+		db = -y
+		return dw, db
 
-		nsamp = len(x)
-		for i in range(itera):
+	def solve(self):
+		nsamp = len(self.x)
+		for i in range(self.itera):
 			k = np.random.randint(nsamp)
-			if Lossfunc(x[k], y[k], w, b) > 0:
-				dw, db = diffLoss(x[k],y[k])
-				w -= eta*dw
-				b -= eta*db
-				print('i=', i, 'Loss Function update:', Lossfunc(x[k],y[k],w,b))
-		return w, b
+			if self.Lossfunc(self.x[k], self.y[k], self.w, self.b) > 0:
+				dw, db = self.diffLoss(self.x[k], self.y[k])
+				self.w -= self.eta*dw
+				self.b -= self.eta*db
+				print('i=', i, 'Loss Function update:', self.Lossfunc(self.x[k], self.y[k], self.w, self.b))
+		return self.w, self.b
 
 if __name__ == "__main__":
 	# Training data set
@@ -42,5 +49,5 @@ if __name__ == "__main__":
 	eta = 0.01
 	itera = 1000
 
-	bisel = biselector()
-	print(bisel.perceptron(w, b, x, y, eta, itera))
+	bisel = perceptron(w, b, x, y, eta, itera)
+	print(bisel.solve())
