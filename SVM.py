@@ -3,30 +3,6 @@
 import numpy as np
 from sympy import * 
 
-# #设置变量
-# x1 = symbols("x1")
-# x2 = symbols("x2")
-# alpha = symbols("alpha")
-# beta = symbols("beta")
- 
-# #构造拉格朗日等式
-# L = 10 - x1*x1 - x2*x2 + alpha * (x1*x1 - x2) + beta * (x1 + x2)
-# print(type(L), type(x1)) #<class 'sympy.core.add.Add'> <class 'sympy.core.symbol.Symbol'>
-# #求导，构造KKT条件
-# difyL_x1 = diff(L, x1)  #对变量x1求导
-# difyL_x2 = diff(L, x2)  #对变量x2求导
-# difyL_beta = diff(L, beta)  #对乘子beta求导
-# dualCpt = alpha * (x1 * x1 - x2)  #对偶互补条件
- 
-# #求解KKT等式
-# aa = solve([difyL_x1, difyL_x2, difyL_beta, dualCpt], [x1, x2, alpha, beta])
- 
-# #打印结果，还需验证alpha>=0和不等式约束<=0
-# for i in aa:
-#     if i[2] >= 0:
-#         if (i[0]**2 - i[1]) <= 0:
-#             print(i)
-
 class SVM():
 
 	def __init__(self, xs: np.ndarray, ys: np.ndarray):
@@ -54,6 +30,8 @@ class SVM():
 		for i in range(self.n): difl.append(diff(Lt, self.cn[i]))
 		for i in range(self.n): dualkkt.append(self.cn[i] * self.an[i])
 		# asol = solve(difl + dualkkt, self.an + [beta] + self.cn)
+		# for i in range(self.n):
+		# 	difl = [difl[j].subs(self.an[i], self.an[i]**2) for j in range(len(difl))]
 		asol = solve(difl, self.an + [beta])
 		return asol
 
