@@ -152,4 +152,5 @@ if __name__ == "__main__":
 	svm1 = SVM_SMO(xs, ys)
 	an, b = svm1.solve()
 
-
+# 画出分类结果
+# 加入测试方法
