@@ -33,7 +33,25 @@ class SVM():
 		# for i in range(self.n):
 		# 	difl = [difl[j].subs(self.an[i], self.an[i]**2) for j in range(len(difl))]
 		asol = solve(difl, self.an + [beta])
+
+		for j, ai in enumerate(self.an):
+			if asol[ai] < 0: 
+				print(ai, asol[ai])
+				subLt = Lt.subs(ai, 0.0)
+				subdifl = []
+				for i in range(self.n): 
+					if i != j: subdifl.append(diff(subLt, self.an[i]))
+				subdifl.append(diff(subLt, beta))
+				nonnegaAsol = solve(subdifl, self.an[0:j] + self.an[j+1:len(asol)] + [beta])
+				print(subdifl)
+				print(nonnegaAsol)
+				print('ajs:', self.an[0:j] + self.an[j+1: len(asol)])
 		return asol
+
+	def solve(self):
+		asol = self.dualsolve()
+		for ai in asol:
+			print(asol[ai])
 
 if __name__ == "__main__":
 	
@@ -41,7 +59,7 @@ if __name__ == "__main__":
 	yt = np.array([1, 1, -1])
 
 	svmsel = SVM(xt, yt)
-	print(svmsel.dualsolve())
+	print(svmsel.solve())
 
 
 
