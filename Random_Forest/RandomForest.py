@@ -1,3 +1,5 @@
+# This implementation is based on code from https://www.udemy.com/course/machine-learning-in-python-random-forest-adaboost/
+
 import numpy as np 
 import pandas as pd
 import DecisionTree
