@@ -23,9 +23,9 @@ class HMM:
 
 
 
-    def fit(self, X, n_iter = 50):
+    def fit(self, X, n_iter = 30):
         # random initialization
-        # np.random.seed(123)
+        np.random.seed(153)
         N = len(X)
         D = X[0].shape[1]
         Tmax = max(max(x) for x in X) + 1
@@ -78,7 +78,8 @@ class HMM:
                 gamma = np.zeros((T, self.M, self.K))
                 for t in range(T):
                     ab = np.sum(alpha[t,:]*beta[t,:])
-                    gamma[t,:,:] = alpha[t,:]*beta[t,:]/(B[:,t]*ab) *components[:,:,t]
+                    for k in range(self.K):
+                        gamma[t,:,k] = alpha[t,:]*beta[t,:]/(B[:,t]*ab) *components[:,k,t]
                 gammas.append(gamma)
 
             cost = np.sum(np.log(P))
@@ -100,22 +101,28 @@ class HMM:
                         for t in range(T):
                             #print("before update", n,i,j,numesig[i,j].shape, np.outer(x[t] - self.mu[i,j], x[t] - self.mu[i,j]).shape)
                             numesig[i,j] += gamma[t,i,j] * np.outer(x[t] - self.mu[i,j], x[t] - self.mu[i,j])/P[n]
-
-            #print(numeA.shape, denoA.shape, numeB.shape, denoB.shape)
-                            
+                # if n==0 and it == 0:
+                #     print(numeA)
+                #     print(numeR)
+                #     print(denoA)
+                #     print(numemu)
+                #     print(numesig)
+                #     print(gammas[n])
+                #     print(np.sum(gammas[n], axis = 0))
+               
             denoR = np.sum(numeR, axis = 1)
             self.A = numeA/(denoA.reshape(-1,1))
-            self.R = numeR/denoR
             for i in range(self.M):
+                self.R[i] = numeR[i]/denoR[i]
                 for j in range(self.K):            
                     self.mu[i,j] = numemu[i,j]/numeR[i,j]
                     self.sigma[i,j] = numesig[i,j]/numeR[i,j]
 
-        print("A:", self.A)
-        print("R:", self.R)
-        print("mu:", self.mu)
-        print("sigma:", self.sigma)
-        print("Pi:", self.Pi)
+            print("A:", self.A)
+            print("R:", self.R)
+            print("mu:", self.mu)
+            print("sigma:", self.sigma)
+            print("Pi:", self.Pi)
 
         plt.plot(costs)
         plt.show()
@@ -201,17 +208,18 @@ def real_signal():
 
 
 def fake_signal(init=simple_init):
-    signals = get_signals(N=10, T=10, init=init)
-    # for signal in signals:
-    #     for d in xrange(signal.shape[1]):
-    #         plt.plot(signal[:,d])
-    # plt.show()
+    signals = get_signals(N=1, T=10, init=init)
+    for signal in signals:
+        for d in range(signal.shape[1]):
+            plt.plot(signal[:,d])
+    plt.show()
 
     hmm = HMM(2, 2)
     hmm.fit(signals)
     L = hmm.log_likelihood_multi(signals).sum()
     print("LL for fitted params:", L)
-
+    plt.plot(hmm.predict_sequence(signals[0]))
+    plt.show()
     # test in actual params
     _, _, _, pi, A, R, mu, sigma = init()
     hmm.set(pi, A, R, mu, sigma)
